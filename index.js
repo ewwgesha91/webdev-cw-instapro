@@ -51,8 +51,8 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === POSTS_PAGE) {
-      page = LOADING_PAGE;
-      renderApp();
+      // page = LOADING_PAGE;
+      // renderApp();
 
       return getPosts({ token: getToken() })
         .then((newPosts) => {

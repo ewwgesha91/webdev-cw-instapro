@@ -22,13 +22,3 @@ export const sanitizeHtml = (htmlString) => {
     "&gt;", ">", "&amp;", "&", '&quot;', "");
 
 };
-
-export const currentDate = (date) => {
-  let dateTime = new Date(date);
-  let day = String(dateTime.getDate()).padStart(2, '0');
-  let month = String(dateTime.getMonth() + 1).padStart(2, '0');
-  let year = String(dateTime.getFullYear() - 2000);
-  let hour = String(dateTime.getHours()).padStart(2, '0');
-  let minutes = String(dateTime.getMinutes()).padStart(2, '0');
-  return `${day}.${month}.${year} ${hour}:${minutes}`;
-};

@@ -1,8 +1,9 @@
-import { USER_POSTS_PAGE } from "../routes.js";
+import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
-import { currentDate } from "../helpers.js";
-
+import { posts, goToPage, getToken } from "../index.js";
+import { dislike, like } from "../api.js";
+import { formatDistanceToNow } from "date-fns";
+import { ru } from "date-fns/locale";
 export function renderPostsPageComponent() {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
@@ -28,7 +29,7 @@ export function renderPostsPageComponent() {
         <span class="user-name">${post.user.name}</span>
         ${post.description}
       </p>
-      <p class="post-date">${currentDate(post.createdAt)}</p>
+      <p class="post-date">${formatDistanceToNow(new Date(post.createdAt), {locale: ru})} назад</p>
     </li>`
   })
   /**
@@ -54,4 +55,41 @@ export function renderPostsPageComponent() {
       });
     });
   }
+initLikeListener();
 }
+
+function initLikeListener(userId) {
+  const likeButtonElement = document.querySelectorAll(".like-button");
+  for (const likeElement of likeButtonElement) {
+    likeElement.addEventListener("click", () => {
+      if (likeElement.dataset.isLiked === "true") {
+        dislike({
+          id: likeElement.dataset.postId, token: getToken()
+        })
+        .then(() => {
+          if (userId) {
+            goToPage(USER_POSTS_PAGE, { userId })
+          }
+          else {
+            goToPage(POSTS_PAGE, { noLoading: true })
+          }
+        })
+      }
+      else {
+        like({
+          id: likeElement.dataset.postId, token: getToken()
+        })
+        .then(() => {
+          if (userId) {
+            goToPage(USER_POSTS_PAGE, { userId })
+          }
+          else {
+            goToPage(POSTS_PAGE, { noLoading: true })
+          }
+        });
+      }
+    })
+  }
+  
+}
+// initLikeListener();

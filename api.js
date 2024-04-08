@@ -3,7 +3,7 @@
 import { getToken } from "./index.js";
 
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
+const personalKey = "lomakina-evgeniia";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
@@ -26,10 +26,13 @@ export function getPosts({ token }) {
     });
 }
 
-export function getUserPosts({id}) {
+export function getUserPosts( {id, token}) {
   console.log(id);
   return fetch(postsHost + `/user-posts/${id}`, {
     method: "GET",
+    headers: {
+      Authorization: token,
+    },
   }).then((response) => {
     return response.json();
   }).then((data) => {
@@ -97,4 +100,28 @@ export function addPost({ description, imageUrl }) {
   .then((response) => {
     return response.json();
   })
+}
+
+export function like({id, token}) {
+  return fetch(postsHost + `/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  }).then((data) => {
+    return data.post
+  })
+}
+
+export function dislike({id, token}) {
+  return fetch(postsHost + `/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
 }
