@@ -62,7 +62,7 @@ function initLikeListener(userId) {
   const likeButtonElement = document.querySelectorAll(".like-button");
   for (const likeElement of likeButtonElement) {
     likeElement.addEventListener("click", () => {
-      if (likeElement.dataset.isLiked === "true") {
+      if (likeElement.dataset.liked === "true") {
         dislike({
           id: likeElement.dataset.postId, token: getToken()
         })
