@@ -69,7 +69,7 @@ export const goToPage = (newPage, data) => {
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
-      return getUserPosts({id: data.userId})
+      return getUserPosts({id: data.userId, token: getToken()})
       .then((newPosts) => {
         page = USER_POSTS_PAGE;
         posts = newPosts;
@@ -127,17 +127,12 @@ const renderApp = () => {
   }
 
   if (page === POSTS_PAGE) {
-    return renderPostsPageComponent({
-      appEl,
-    });
+    return renderPostsPageComponent({singleUserMode: false});
   }
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return renderPostsPageComponent({
-      appEl, posts
-    }) 
+    return renderPostsPageComponent({singleUserMode: true}) 
 };
 }
 goToPage(POSTS_PAGE);

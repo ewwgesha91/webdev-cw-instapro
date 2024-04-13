@@ -4,12 +4,17 @@ import { posts, goToPage, getToken } from "../index.js";
 import { dislike, like } from "../api.js";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
-export function renderPostsPageComponent() {
+
+export function renderPostsPageComponent({singleUserMode}) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
   const appElement = document.getElementById('app');
   const appEl = posts.map((post) => {
+    if(singleUserMode){
+      console.log(post);
+    }
+    
     return `
     <li class="post" id='post'>
       <div class="post-header" data-user-id="${post.user.id}">
@@ -55,19 +60,21 @@ export function renderPostsPageComponent() {
       });
     });
   }
-initLikeListener();
+initLikeListener(singleUserMode);
 }
 
-function initLikeListener(userId) {
+function initLikeListener(singleUserMode) {
   const likeButtonElement = document.querySelectorAll(".like-button");
   for (const likeElement of likeButtonElement) {
     likeElement.addEventListener("click", () => {
+      const userId = likeElement.dataset.index;
+      console.log(userId);
       if (likeElement.dataset.liked === "true") {
         dislike({
           id: likeElement.dataset.postId, token: getToken()
         })
         .then(() => {
-          if (userId) {
+          if (singleUserMode) {
             goToPage(USER_POSTS_PAGE, { userId })
           }
           else {
@@ -80,7 +87,7 @@ function initLikeListener(userId) {
           id: likeElement.dataset.postId, token: getToken()
         })
         .then(() => {
-          if (userId) {
+          if (singleUserMode) {
             goToPage(USER_POSTS_PAGE, { userId })
           }
           else {
@@ -90,6 +97,4 @@ function initLikeListener(userId) {
       }
     })
   }
-  
 }
-// initLikeListener();
