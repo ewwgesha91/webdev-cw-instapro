@@ -1,4 +1,5 @@
 import { sanitizeHtml } from "../helpers.js";
+import { getToken } from "../index.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
@@ -46,14 +47,21 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       });
     }
 
-    const description = document.getElementById('textarea-input');
+    
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
-        description: sanitizeHtml(description.value),
-        imageUrl,
-      });
+      const description = document.getElementById('textarea-input');
+      if (description.value === "") {
+        alert('Не заполнено описание фото');
+      } else if (!imageUrl) {
+        alert('Не добавлено фото');
+      } else {
+        onAddPostClick({
+          token: getToken(),
+          description: sanitizeHtml(description.value),
+          imageUrl,
+        });
+      }
     });
   };
-
   render();
 }

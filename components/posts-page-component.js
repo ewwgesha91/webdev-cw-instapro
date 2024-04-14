@@ -1,6 +1,6 @@
 import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
+import { posts, goToPage, getToken, token } from "../index.js";
 import { dislike, like } from "../api.js";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -36,7 +36,7 @@ export function renderPostsPageComponent({singleUserMode}) {
       </p>
       <p class="post-date">${formatDistanceToNow(new Date(post.createdAt), {locale: ru})} назад</p>
     </li>`
-  })
+  }).join("")
   /**
    * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
    * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
@@ -69,6 +69,10 @@ function initLikeListener(singleUserMode) {
     likeElement.addEventListener("click", () => {
       const userId = likeElement.dataset.index;
       console.log(userId);
+      if (!token) {
+        alert("Пожалуйста, зарегистрируйтесь или войдите в аккаунт");
+        return;
+      }
       if (likeElement.dataset.liked === "true") {
         dislike({
           id: likeElement.dataset.postId, token: getToken()
